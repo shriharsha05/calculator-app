@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item android:title="@string/about_us"
+          android:id="@+id/abt_me"></item>
+    <item android:id="@+id/blog"
+          android:title="@string/our_blog"></item>
+    <item android:id="@+id/wapp"
+        android:title="Share"></item>
+    <item android:title="Home"
+        android:id="@+id/home_btn"></item>
+
+</menu>
