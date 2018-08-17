@@ -12,6 +12,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
+
 /**
  * Calculator app
  * By
@@ -20,264 +23,109 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button b1,b2,b3,b4,b5,b6,b7,b8,b9,bdot,b0,bequal,bdivide,bplus,bminus,bmulti,bclear;
-
-    Boolean add=false,sub=false,divide=false,multiply=false;
-
-    Double value1,value2;
-
-    TextView edttxt;
+    private int[] numericButtons = {R.id.btn_one,R.id.btn_two,R.id.btn_three,R.id.btn_four,R.id.btn_five,R.id.btn_six,R.id.btn_seven,R.id.btn_eight,R.id.btn_nine,R.id.btn_zero};
+    private int[] operatorButtons = {R.id.btn_divide,R.id.btn_plus,R.id.btn_minus,R.id.btn_multiply};
+    private TextView txtScreen;
+    private boolean lastNumeric;
+    private boolean stateError;
+    private boolean lastDot;
     View view1,view2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //setContentView(R.layout.layout1);
-        view1=getLayoutInflater().inflate(R.layout.layout1,null);
-        view2=getLayoutInflater().inflate(R.layout.about_me,null);
+        view1 = getLayoutInflater().inflate(R.layout.layout2, null);
+        view2 = getLayoutInflater().inflate(R.layout.about_me, null);
 
         setContentView(view1);
-        b1= (Button) findViewById(R.id.btn_one);
-        b2= (Button) findViewById(R.id.btn_two);
-        b3= (Button) findViewById(R.id.btn_three);
-        b4= (Button) findViewById(R.id.btn_four);
-        b5= (Button) findViewById(R.id.btn_five);
-        b6= (Button) findViewById(R.id.btn_six);
-        b7= (Button) findViewById(R.id.btn_seven);
-        b8= (Button) findViewById(R.id.btn_eight);
-        b9= (Button) findViewById(R.id.btn_nine);
-        b0= (Button) findViewById(R.id.btn_zero);
-        bdot= (Button) findViewById(R.id.btn_dot);
-        bequal= (Button) findViewById(R.id.btn_equal);
-        bdivide= (Button) findViewById(R.id.btn_divide);
-        bplus= (Button) findViewById(R.id.btn_plus);
-        bminus= (Button) findViewById(R.id.btn_minus);
-        bmulti= (Button) findViewById(R.id.btn_multiply);
-        bclear= (Button) findViewById(R.id.btn_clear);
-        edttxt= (TextView) findViewById(R.id.edt_txt);
 
-        final MediaPlayer mediaPlayer = MediaPlayer.create(this,R.raw.click);
-        final MediaPlayer mediaPlayer1= MediaPlayer.create(this,R.raw.result);
-        b1.setOnClickListener(new View.OnClickListener()
-        {
+        this.txtScreen = (TextView) findViewById(R.id.edt_txt);
+        setNumericOnClickListener();
+        setOperatorOnClickListener();
+    }
+
+    private void setNumericOnClickListener() {
+        //common OnClickListener
+        View.OnClickListener listener = new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                mediaPlayer.start();
-                edttxt.setText(edttxt.getText()+"1");
-            }
-        });
-
-        b2.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                mediaPlayer.start();
-                edttxt.setText(edttxt.getText()+"2");
-            }
-        });
-
-        b3.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                mediaPlayer.start();
-                edttxt.setText(edttxt.getText()+"3");
-            }
-        });
-
-        b4.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                mediaPlayer.start();
-                edttxt.setText(edttxt.getText()+"4");
-            }
-        });
-
-        b5.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                mediaPlayer.start();
-                edttxt.setText(edttxt.getText()+"5");
-            }
-        });
-
-        b6.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                mediaPlayer.start();
-                edttxt.setText(edttxt.getText()+"6");
-            }
-        });
-
-        b7.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                mediaPlayer.start();
-                edttxt.setText(edttxt.getText()+"7");
-            }
-        });
-
-        b8.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                mediaPlayer.start();
-                edttxt.setText(edttxt.getText()+"8");
-            }
-        });
-
-        b9.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                mediaPlayer.start();
-                edttxt.setText(edttxt.getText()+"9");
-            }
-        });
-
-        bdot.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                mediaPlayer.start();
-                edttxt.setText(edttxt.getText()+".");
-            }
-        });
-
-        b0.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                mediaPlayer.start();
-                edttxt.setText(edttxt.getText()+"0");
-            }
-        });
-
-        bequal.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                value2=Double.parseDouble(edttxt.getText()+"");
-                edttxt.setText("=");
-                edttxt.setText(null);
-
-
-                mediaPlayer1.start();
-                if(add==true)
-                {
-                    edttxt.setText(value1+value2+"");
-                    add=false;
+            public void onClick(View v) {
+                Button button = (Button) v;
+                if (stateError) {
+                    txtScreen.setText(button.getText());
+                    stateError = false;
+                } else {
+                    txtScreen.append(button.getText());
                 }
-                else if(sub==true)
-                {
-                    edttxt.setText(value1-value2+"");
-                    sub=false;
-                }
-                else if(multiply==true)
-                {
-                    edttxt.setText(value1*value2+"");
-                    multiply=false;
-                }
-                else if(divide==true)
-                {
-                    if(value2!=0)
-                    {
-                        edttxt.setText(value1/value2+"");
-                        divide=false;
-                    }
-                    else
-                        edttxt.setText("Error");
+                lastNumeric = true;
+            }
+        };
+        for (int id : numericButtons) {
+            findViewById(id).setOnClickListener(listener);
+        }
+    }
 
+    private void setOperatorOnClickListener() {
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (lastNumeric && !stateError) {
+                    Button button = (Button) v;
+                    txtScreen.append(button.getText());
+                    lastNumeric = false;
+                    lastDot = false;
+                }
+            }
+        };
+        for (int id : operatorButtons) {
+            findViewById(id).setOnClickListener(listener);
+        }
+        // Decimal point
+        findViewById(R.id.btn_dot).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (lastNumeric && !stateError && !lastDot) {
+                    txtScreen.append(".");
+                    lastNumeric = false;
+                    lastDot = true;
                 }
 
             }
         });
 
-        bdivide.setOnClickListener(new View.OnClickListener()
-        {
+        // Clear button
+        findViewById(R.id.btn_clear).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                mediaPlayer.start();
-                  value1 =Double.parseDouble(edttxt.getText()+"");
-                    divide = true;
-                    edttxt.setText(null);
-
+            public void onClick(View v) {
+                txtScreen.setText("");
+                lastNumeric = false;
+                stateError = false;
+                lastDot = false;
             }
         });
 
-        bmulti.setOnClickListener(new View.OnClickListener()
-        {
+        // Equal button
+        findViewById(R.id.btn_equal).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                mediaPlayer.start();
-                    value1 = Double.parseDouble(edttxt.getText() + "");
-                    //edttxt.setText(" * ");
-                    multiply = true;
-                    edttxt.setText(null);
-
+            public void onClick(View v) {
+                onEqual();
             }
         });
+    }
 
-        bplus.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                mediaPlayer.start();
-                    value1= Double.parseDouble(edttxt.getText()+"");
-                    //edttxt.setText( " + ");
-                    add = true;
-                    edttxt.setText("+");
-
+    private void onEqual() {
+        if (lastNumeric && !stateError) {
+            String txt = txtScreen.getText().toString();
+            Expression expression = new ExpressionBuilder(txt).build();
+            try {
+                double result = expression.evaluate();
+                txtScreen.setText(Double.toString(result));
+                lastDot = true;
+            } catch (ArithmeticException ex) {
+                txtScreen.setText("Error");
+                stateError = true;
+                lastNumeric = false;
             }
-        });
-
-        bminus.setOnClickListener(new View.OnClickListener()
-
-        {
-            @Override
-            public void onClick(View v)
-            {
-                mediaPlayer.start();
-                  String x = edttxt.getText().toString();
-                  value1= Double.parseDouble(x);
-                 // value1= Double.parseDouble(edttxt.getText()+"");
-                    //edttxt.setText( " - ");
-                    sub = true;
-                    edttxt.setText(null);
-
-            }
-        });
-
-        bclear.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-             edttxt.setText("");
-            }
-        });
-
-
-
+        }
     }
 
     @Override
@@ -308,20 +156,16 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
                 break;
             case R.id.wapp : String message = "Hey there!!\nCheck this awesome calculator app :)";
-                             Intent sendIntent = new Intent();
-                             sendIntent.setAction(Intent.ACTION_SEND);
-                             sendIntent.putExtra(Intent.EXTRA_TEXT,message);
-                             sendIntent.setType("text/plain");
-                             sendIntent.setPackage("com.whatsapp");
-                             startActivity(sendIntent);
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT,message);
+                sendIntent.setType("text/plain");
+                sendIntent.setPackage("com.whatsapp");
+                startActivity(sendIntent);
             case R.id.home_btn:setContentView(view1);
-
-
         }
         return true;
     }
-
-
 }
 
 

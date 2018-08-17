@@ -3,9 +3,41 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/newcolor</item>
+        <item name="colorPrimaryDark">@color/newcolor2</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="AppTheme.Button" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:background">#373737</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">24dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:elevation">4dp</item>
+        <item name="android:layout_columnWeight">0.5</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="Clear.Button" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:background">#373737</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">24dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:elevation">4dp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <color name="newcolor">#616161</color>
+    <color name="newcolor2">#373737</color>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

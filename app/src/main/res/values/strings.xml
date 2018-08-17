@@ -19,4 +19,12 @@
     <string name="_9">9</string>
     <string name="_0">0</string>
     <string name="_5">5</string>
+    <string name="_divide">/</string>
+    <string name="_multiply">*</string>
+    <string name="_minus">-</string>
+    <string name="_plus">+</string>
+    <string name="_equals">=</string>
+    <string name="_dot">.</string>
+    <string name="error">Error</string>
+    <string name="title_activity_main2">Main2Activity</string>
 </resources>
